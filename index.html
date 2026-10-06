@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Quantum Purble Pairs - a Windows 7 Purble Place style memory game for Moth Hack 2026.">
+<meta name="theme-color" content="#B07AA1">
+<meta property="og:title" content="Quantum Purble Pairs">
+<meta property="og:type" content="website">
+<title>Quantum Purble Pairs</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- =====================================================================
+     HIDDEN SVG LIBRARY: gradients, 3-leaf shamrock, chalk drawings, tokens
+     (0x0 + absolute so gradients still render; display:none would break them)
+     ===================================================================== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+
+    <!-- Shamrock gradients -->
+    <linearGradient id="clover-fill" x1="0.2" y1="0" x2="0.8" y2="1">
+      <stop offset="0%" stop-color="#1c9a43"/>
+      <stop offset="45%" stop-color="#147533"/>
+      <stop offset="100%" stop-color="#0e5625"/>
+    </linearGradient>
+    <linearGradient id="clover-edge" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#b6ffc2"/>
+      <stop offset="50%" stop-color="#5eed75"/>
+      <stop offset="100%" stop-color="#37d65a"/>
+    </linearGradient>
+
+    <!-- Token gradients (used by the card-front token symbols) -->
+    <linearGradient id="tk-gold" x1="0.2" y1="0" x2="0.8" y2="1">
+      <stop offset="0%" stop-color="#fff7b0"/>
+      <stop offset="55%" stop-color="#f2c40c"/>
+      <stop offset="100%" stop-color="#b98300"/>
+    </linearGradient>
+    <linearGradient id="tk-pink" x1="0.2" y1="0" x2="0.8" y2="1">
+      <stop offset="0%" stop-color="#ffc2e2"/>
+      <stop offset="55%" stop-color="#f0479d"/>
+      <stop offset="100%" stop-color="#b3146a"/>
+    </linearGradient>
+    <linearGradient id="tk-blue" x1="0.2" y1="0" x2="0.8" y2="1">
+      <stop offset="0%" stop-color="#c4ecff"/>
+      <stop offset="55%" stop-color="#2f8be8"/>
+      <stop offset="100%" stop-color="#1250a8"/>
+    </linearGradient>
+    <linearGradient id="tk-purple" x1="0.2" y1="0" x2="0.8" y2="1">
+      <stop offset="0%" stop-color="#e2ccff"/>
+      <stop offset="55%" stop-color="#8a52ea"/>
+      <stop offset="100%" stop-color="#4b21a8"/>
+    </linearGradient>
+    <linearGradient id="tk-green" x1="0.2" y1="0" x2="0.8" y2="1">
+      <stop offset="0%" stop-color="#d2ffc2"/>
+      <stop offset="55%" stop-color="#3cc04a"/>
+      <stop offset="100%" stop-color="#1b7a2a"/>
+    </linearGradient>
+    <linearGradient id="tk-orange" x1="0.2" y1="0" x2="0.8" y2="1">
+      <stop offset="0%" stop-color="#ffe0c2"/>
+      <stop offset="55%" stop-color="#f27a1e"/>
+      <stop offset="100%" stop-color="#b04a05"/>
+    </linearGradient>
+
+    <!-- One reusable heart-shaped leaf (tip at the centre point 50,52) -->
+    <path id="heart-leaf" d="M50 52 C40 44 26 40 26 26 C26 14 43 11 50 23 C57 11 74 14 74 26 C74 40 60 44 50 52 Z"/>
+
+    <!-- 3-leaf shamrock: curved stem + 3 heart leaves + veins + gloss -->
+    <symbol id="purble-shamrock-clover" viewBox="0 0 100 100">
+      <g transform="translate(5 2) scale(0.9)">
+        <path d="M49 52 C49 68 46 78 54 92 C56 95 61 93 58 89 C53 78 53 66 52 52 Z"
+              fill="url(#clover-fill)" stroke="url(#clover-edge)" stroke-width="2" stroke-linejoin="round"/>
+        <g fill="url(#clover-fill)" stroke="url(#clover-edge)" stroke-width="2.8" stroke-linejoin="round" paint-order="stroke">
+          <use href="#heart-leaf"/>
+          <use href="#heart-leaf" transform="rotate(120 50 52)"/>
+          <use href="#heart-leaf" transform="rotate(240 50 52)"/>
+        </g>
+        <g fill="none" stroke="#5eed75" stroke-width="1.6" stroke-linecap="round" opacity="0.8">
+          <path d="M50 47 L50 28"/>
+          <path d="M50 47 L50 28" transform="rotate(120 50 52)"/>
+          <path d="M50 47 L50 28" transform="rotate(240 50 52)"/>
+        </g>
+        <g fill="#fff" opacity="0.45">
+          <ellipse cx="37" cy="24" rx="6" ry="2.6" transform="rotate(-35 37 24)"/>
+          <ellipse cx="37" cy="24" rx="6" ry="2.6" transform="rotate(-35 37 24) rotate(120 50 52)"/>
+          <ellipse cx="37" cy="24" rx="6" ry="2.6" transform="rotate(240 50 52) rotate(-35 37 24)"/>
+        </g>
+      </g>
+    </symbol>
+
+    <!-- Chalkboard drawings (white chalk outlines) -->
+    <symbol id="chalk-shamrock" viewBox="0 0 100 100">
+      <g transform="translate(5 2) scale(0.9)" fill="none" stroke="#f2f2f2" stroke-width="3" stroke-linejoin="round" stroke-linecap="round">
+        <use href="#heart-leaf"/>
+        <use href="#heart-leaf" transform="rotate(120 50 52)"/>
+        <use href="#heart-leaf" transform="rotate(240 50 52)"/>
+        <path d="M50 52 C50 68 48 78 56 90"/>
+      </g>
+    </symbol>
+    <symbol id="chalk-heart" viewBox="0 0 100 100">
+      <path d="M50 82 C20 58 18 34 32 26 C42 21 49 28 50 34 C51 28 58 21 68 26 C82 34 80 58 50 82 Z"
+            fill="none" stroke="#f2f2f2" stroke-width="3" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="chalk-smiley" viewBox="0 0 100 100">
+      <g fill="none" stroke="#f2f2f2" stroke-width="3" stroke-linecap="round">
+        <circle cx="50" cy="50" r="30"/>
+        <circle cx="40" cy="42" r="2" fill="#f2f2f2"/>
+        <circle cx="60" cy="42" r="2" fill="#f2f2f2"/>
+        <path d="M34 56 Q50 72 66 56"/>
+      </g>
+    </symbol>
+    <symbol id="chalk-flower" viewBox="0 0 100 100">
+      <g fill="none" stroke="#f2f2f2" stroke-width="3">
+        <circle cx="50" cy="32" r="14"/>
+        <circle cx="34" cy="60" r="14"/>
+        <circle cx="66" cy="60" r="14"/>
+      </g>
+    </symbol>
+
+    <!-- Token art for the card fronts (draw inside the golden ring) -->
+    <symbol id="token-star" viewBox="0 0 100 100">
+      <path d="M50 8 L61 38 L93 39 L67 58 L77 90 L50 71 L23 90 L33 58 L7 39 L39 38 Z"
+            fill="url(#tk-gold)" stroke="#8a6200" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M50 16 L58 38 L50 40 L42 38 Z" fill="#fff" opacity="0.55"/>
+    </symbol>
+    <symbol id="token-heart" viewBox="0 0 100 100">
+      <path d="M50 88 C14 62 10 32 28 20 C40 13 50 22 50 30 C50 22 60 13 72 20 C90 32 86 62 50 88 Z"
+            fill="url(#tk-pink)" stroke="#8a0f50" stroke-width="3" stroke-linejoin="round"/>
+      <ellipse cx="34" cy="30" rx="8" ry="4" fill="#fff" opacity="0.6" transform="rotate(-30 34 30)"/>
+    </symbol>
+    <symbol id="token-moon" viewBox="0 0 100 100">
+      <path d="M62 10 C36 14 22 36 28 60 C34 82 58 94 80 84 C58 82 46 62 52 40 C55 28 60 18 62 10 Z"
+            fill="url(#tk-purple)" stroke="#2f1470" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M44 28 C38 38 36 48 38 58" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity="0.55"/>
+    </symbol>
+    <symbol id="token-bolt" viewBox="0 0 100 100">
+      <path d="M58 6 L22 56 L46 56 L38 94 L78 40 L54 40 Z"
+            fill="url(#tk-orange)" stroke="#7a3300" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M54 14 L34 46" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity="0.55"/>
+    </symbol>
+    <symbol id="token-diamond" viewBox="0 0 100 100">
+      <path d="M50 8 L90 40 L50 92 L10 40 Z" fill="url(#tk-blue)" stroke="#0b2f70" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M10 40 L90 40 M50 8 L34 40 L50 92 L66 40 Z" fill="none" stroke="#fff" stroke-width="2" opacity="0.5"/>
+    </symbol>
+    <symbol id="token-drop" viewBox="0 0 100 100">
+      <path d="M50 8 C50 8 18 46 18 64 C18 82 32 92 50 92 C68 92 82 82 82 64 C82 46 50 8 50 8 Z"
+            fill="url(#tk-green)" stroke="#0f4a1a" stroke-width="3" stroke-linejoin="round"/>
+      <ellipse cx="38" cy="62" rx="6" ry="12" fill="#fff" opacity="0.5" transform="rotate(14 38 62)"/>
+    </symbol>
+
+        <linearGradient id="tk-white" x1="0.2" y1="0" x2="0.8" y2="1"><stop offset="0%" stop-color="#ffffff"/><stop offset="60%" stop-color="#dfe6f5"/><stop offset="100%" stop-color="#9aa8c8"/></linearGradient>
+    <linearGradient id="tk-red" x1="0.2" y1="0" x2="0.8" y2="1"><stop offset="0%" stop-color="#ffb4b4"/><stop offset="55%" stop-color="#e02834"/><stop offset="100%" stop-color="#8a0a16"/></linearGradient>
+
+    <symbol id="tok-1" viewBox="0 0 100 100"><path d="M50 88 C14 62 10 32 28 20 C40 13 50 22 50 30 C50 22 60 13 72 20 C90 32 86 62 50 88 Z" fill="url(#tk-pink)" stroke="#8a0f50" stroke-width="3" stroke-linejoin="round"/><ellipse cx="34" cy="30" rx="8" ry="4" fill="#fff" opacity=".65" transform="rotate(-30 34 30)"/></symbol>
+    <symbol id="tok-2" viewBox="0 0 100 100"><g transform="translate(5 2) scale(.9)" fill="url(#tk-blue)" stroke="#0b2f70" stroke-width="2.6" stroke-linejoin="round"><path d="M49 52 C49 68 46 78 54 92 C56 95 61 93 58 89 C53 78 53 66 52 52 Z"/><use href="#heart-leaf"/><use href="#heart-leaf" transform="rotate(120 50 52)"/><use href="#heart-leaf" transform="rotate(240 50 52)"/></g><ellipse cx="37" cy="24" rx="6" ry="2.6" fill="#fff" opacity=".6" transform="rotate(-35 37 24)"/></symbol>
+    <symbol id="tok-3" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="url(#tk-gold)" stroke="#8a6200" stroke-width="3"/><circle cx="37" cy="40" r="5" fill="#5a3b00"/><circle cx="63" cy="40" r="5" fill="#5a3b00"/><path d="M28 58 Q50 82 72 58" fill="none" stroke="#5a3b00" stroke-width="5" stroke-linecap="round"/><ellipse cx="36" cy="24" rx="12" ry="5" fill="#fff" opacity=".6" transform="rotate(-25 36 24)"/></symbol>
+    <symbol id="tok-4" viewBox="0 0 100 100"><path d="M16 84 L22 58 C25 30 38 14 50 14 C62 14 75 30 78 58 L84 84 Z" fill="url(#tk-green)" stroke="#0f4a1a" stroke-width="3" stroke-linejoin="round"/><g fill="#eaffd8" opacity=".75"><circle cx="38" cy="50" r="2.5"/><circle cx="58" cy="44" r="2.5"/><circle cx="48" cy="66" r="2.5"/><circle cx="66" cy="68" r="2.5"/><circle cx="30" cy="72" r="2.5"/></g><ellipse cx="38" cy="30" rx="6" ry="12" fill="#fff" opacity=".5" transform="rotate(20 38 30)"/></symbol>
+    <symbol id="tok-5" viewBox="0 0 100 100"><path d="M50 8 L61 38 L93 39 L67 58 L77 90 L50 71 L23 90 L33 58 L7 39 L39 38 Z" fill="url(#tk-purple)" stroke="#2f1470" stroke-width="3" stroke-linejoin="round"/><path d="M50 16 L58 38 L50 40 L42 38 Z" fill="#fff" opacity=".55"/></symbol>
+    <symbol id="tok-6" viewBox="0 0 100 100"><path d="M50 8 L86 20 V50 C86 72 70 86 50 94 C30 86 14 72 14 50 V20 Z" fill="url(#tk-orange)" stroke="#7a3300" stroke-width="3" stroke-linejoin="round"/><path d="M50 18 V84" stroke="#fff" stroke-width="3" opacity=".4"/><path d="M24 28 L50 18 L40 40 Z" fill="#fff" opacity=".45"/></symbol>
+    <symbol id="tok-7" viewBox="0 0 100 100"><path d="M50 8 L90 40 L50 92 L10 40 Z" fill="url(#tk-white)" stroke="#5f6f94" stroke-width="3" stroke-linejoin="round"/><path d="M10 40 H90 M50 8 L34 40 L50 92 L66 40 Z" fill="none" stroke="#7d8db0" stroke-width="2" opacity=".7"/></symbol>
+    <symbol id="tok-8" viewBox="0 0 100 100"><path d="M38 10 H62 V38 H90 V62 H62 V90 H38 V62 H10 V38 H38 Z" fill="url(#tk-red)" stroke="#5e0912" stroke-width="3" stroke-linejoin="round"/><path d="M42 14 H58 V36" fill="none" stroke="#fff" stroke-width="3" opacity=".5" stroke-linecap="round"/></symbol>
+
+  </defs>
+</svg>
+
+<!-- =====================================================================
+     CARD TEMPLATE: cloned by JavaScript for every tile
+     .flipped / .matched / .wrong / .is-empty / .hint are toggled on .purble-card
+     Put <svg class="token-svg"><use href="#token-star"/></svg> inside
+     .card-front-ring to show a token on the face-up side.
+     ===================================================================== -->
+<template id="purble-card-template">
+  <div class="purble-card" role="button" tabindex="0" aria-label="Face-down tile" data-token="">
+    <div class="purble-card-inner">
+
+      <!-- Face-down side: lavender tile with the green 3-leaf clover -->
+      <div class="card-face card-back">
+        <svg class="clover-icon" viewBox="0 0 100 100" aria-hidden="true">
+          <use href="#purble-shamrock-clover"/>
+        </svg>
+      </div>
+
+      <!-- Face-up side: cream tile with the dashed golden ring -->
+      <div class="card-face card-front">
+        <div class="card-front-ring"></div>
+      </div>
+
+    </div>
+  </div>
+</template>
+<!-- =====================================================================
+     WINDOWS 7 AERO WINDOW (closed at the end of Part 4)
+     ===================================================================== -->
+<div class="window-container" id="purbleWindow" role="application" aria-label="Quantum Purble Pairs">
+
+  <!-- ---------------- TITLE BAR ---------------- -->
+  <header class="window-titlebar" id="titleBar">
+    <div class="titlebar-left">
+      <svg class="titlebar-icon" viewBox="0 0 100 100" aria-hidden="true">
+        <use href="#purble-shamrock-clover"/>
+      </svg>
+      <span class="titlebar-title">Quantum Purble Pairs</span>
+    </div>
+
+    <div class="titlebar-controls">
+      <button class="ctrl-btn ctrl-min" id="btnMin" type="button" title="Minimize" aria-label="Minimize">
+        <span class="glyph-min"></span>
+      </button>
+      <button class="ctrl-btn ctrl-max" id="btnMax" type="button" title="Maximize" aria-label="Maximize">
+        <span class="glyph-max"></span>
+      </button>
+      <button class="ctrl-btn ctrl-close" id="btnClose" type="button" title="Close" aria-label="Close">
+        <span class="glyph-close">&#10005;</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ---------------- MENU BAR ---------------- -->
+  <nav class="window-menubar" id="menuBar" aria-label="Main menu">
+    <ul class="menu-list">
+
+      <!-- Game menu: opens on hover (CSS only) -->
+      <li class="menu-item" id="menuGame">
+        <span class="menu-label"><u>G</u>ame</span>
+        <ul class="dropdown" role="menu">
+
+          <li class="dropdown-item" role="menuitem" data-action="new">
+            <span class="check"></span>
+            <span class="dd-text">New Game (F2)</span>
+          </li>
+
+          <li class="dropdown-separator" role="separator"></li>
+
+                    <!-- Grid size choices: the check mark moves to the chosen one -->
+          <li class="dropdown-item" role="menuitemradio" aria-checked="true" data-size="6">
+            <span class="check">&#10003;</span>
+            <span class="dd-text">Beginner (6x6 Grid)</span>
+          </li>
+          <li class="dropdown-item" role="menuitemradio" aria-checked="false" data-size="8">
+            <span class="check"></span>
+            <span class="dd-text">Intermediate (8x8 Grid)</span>
+          </li>
+          <li class="dropdown-item" role="menuitemradio" aria-checked="false" data-size="10">
+            <span class="check"></span>
+            <span class="dd-text">Advanced (10x10 Grid)</span>
+          </li>
+
+          <li class="dropdown-separator" role="separator"></li>
+
+          <li class="dropdown-item" role="menuitem" data-dialog="dlgOptions">
+            <span class="check"></span>
+            <span class="dd-text">Options (F5)</span>
+          </li>
+          <li class="dropdown-item" role="menuitem" data-dialog="dlgStats">
+            <span class="check"></span>
+            <span class="dd-text">Statistics (F7)</span>
+          </li>
+
+          <li class="dropdown-separator" role="separator"></li>
+
+          <li class="dropdown-item" role="menuitem" data-dialog="dlgExit">
+            <span class="check"></span>
+            <span class="dd-text">Exit</span>
+          </li>
+
+        </ul>
+      </li>
+
+      <!-- Help menu -->
+      <li class="menu-item" id="menuHelp">
+        <span class="menu-label"><u>H</u>elp</span>
+        <ul class="dropdown" role="menu">
+          <li class="dropdown-item" role="menuitem" data-dialog="dlgHelp">
+            <span class="check"></span>
+            <span class="dd-text">How to Play (F1)</span>
+          </li>
+          <li class="dropdown-separator" role="separator"></li>
+          <li class="dropdown-item" role="menuitem" data-dialog="dlgAbout">
+            <span class="check"></span>
+            <span class="dd-text">About Quantum Purble Pairs</span>
+          </li>
+        </ul>
+      </li>
+
+    </ul>
+  </nav>
+
+  <!-- =====================================================================
+       MAIN ROOM (closed in Part 4). Everything with class scene-* is
+       decoration only and sits behind the board and side panel.
+       ===================================================================== -->
+  <main class="window-content" id="room">
+
+    <!-- Soft light rays fanning out across the pink wall -->
+    <div class="scene-rays" aria-hidden="true"></div>
+
+    <!-- Window at the left edge: sky, sun and green hill -->
+    <div class="scene-window" aria-hidden="true">
+      <div class="window-pane"></div>
+    </div>
+
+    <!-- Lower wall panel with the baseboard -->
+    <div class="scene-wainscot" aria-hidden="true"></div>
+
+    <!-- Checkered floor drawn in perspective -->
+    <div class="scene-floor" aria-hidden="true"></div>
+
+    <!-- Little wall shelf with three coloured pegs -->
+    <div class="scene-shelf" aria-hidden="true">
+      <i></i><i></i><i></i>
+    </div>
+
+    <!-- Orange door at the right edge -->
+    <div class="scene-door" aria-hidden="true">
+      <div class="door-panel"></div>
+      <div class="door-knob"></div>
+    </div>
+
+    <!-- PART 3 CONTINUES HERE: play field, then the side panel -->
+        <!-- ================= PLAY FIELD ================= -->
+    <section class="play-field-wrapper" aria-label="Game board">
+      <div class="purble-purple-frame" id="boardFrame">
+
+        <!-- Must stay empty: JavaScript clones the card template into it -->
+        <div id="purble-card-grid" class="card-grid-container" aria-live="polite"></div>
+
+        <!-- Sparkle burst, moved to the clicked tile by script -->
+        <div class="sparkle-burst" id="sparkleBurst" aria-hidden="true">
+          <b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b>
+        </div>
+
+        <!-- Brass feet under the board -->
+        <i class="frame-foot foot-l" aria-hidden="true"></i>
+        <i class="frame-foot foot-r" aria-hidden="true"></i>
+      </div>
+    </section>
+
+    <!-- ================= SIDE PANEL ================= -->
+    <aside class="status-panel" aria-label="Game status">
+
+      <!-- Blue gauge tube (set --level on .tube-liquid, e.g. style="--level:60%") -->
+      <div class="tube-wrap" id="gaugeTube" aria-hidden="true">
+        <div class="tube-cap tube-cap-top"></div>
+        <div class="tube-glass">
+          <div class="tube-ticks"></div>
+          <div class="tube-liquid" id="tubeLiquid"></div>
+          <div class="tube-gloss"></div>
+        </div>
+        <div class="tube-cap tube-cap-bottom"></div>
+      </div>
+
+      <!-- Token accumulator jar (set --fill 0-3 on #tokenJar) -->
+      <div class="jar-section">
+        <div id="tokenJar" class="glass-accumulator-jar" role="img" aria-label="Token accumulator jar">
+          <div class="jar-rim"></div>
+          <div class="jar-body">
+            <div class="jar-gloss jar-gloss-left"></div>
+            <div class="jar-gloss jar-gloss-right"></div>
+            <span class="jar-coin coin-a"></span>
+            <span class="jar-coin coin-b"></span>
+            <svg class="jar-clover jar-clover-a" viewBox="0 0 100 100" aria-hidden="true"><use href="#purble-shamrock-clover"/></svg>
+            <svg class="jar-clover jar-clover-b" viewBox="0 0 100 100" aria-hidden="true"><use href="#purble-shamrock-clover"/></svg>
+          </div>
+        </div>
+
+        <!-- White stand with 3 token slots; add .filled to light one up -->
+        <div class="jar-base">
+          <span class="token-slot token-slot-gold" id="slot1"></span>
+          <span class="token-slot" id="slot2"></span>
+          <span class="token-slot" id="slot3"></span>
+        </div>
+      </div>
+
+      <!-- Chalkboard scoreboard -->
+      <div class="score-board-classic">
+        <div class="chalk-frame">
+          <i class="screw s1"></i><i class="screw s2"></i><i class="screw s3"></i><i class="screw s4"></i>
+
+          <div class="chalk-drawings" aria-hidden="true">
+            <svg viewBox="0 0 100 100"><use href="#tok-1"/></svg>
+            <svg viewBox="0 0 100 100"><use href="#tok-2"/></svg>
+            <svg viewBox="0 0 100 100"><use href="#tok-3"/></svg>
+            <svg viewBox="0 0 100 100"><use href="#tok-4"/></svg>
+            <svg viewBox="0 0 100 100"><use href="#tok-5"/></svg>
+            <svg viewBox="0 0 100 100"><use href="#tok-6"/></svg>
+            <svg viewBox="0 0 100 100"><use href="#tok-7"/></svg>
+            <svg viewBox="0 0 100 100"><use href="#tok-8"/></svg>
+          </div>
+
+          <div class="chalk-scores">
+            <div class="score-row">
+              <span class="score-label">MATCHES</span>
+              <span class="score-value" id="matchesValue">0</span>
+            </div>
+            <div class="score-row">
+              <span class="score-label">TURNS</span>
+              <span class="score-value" id="turnsValue">0</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- PART 4 CONTINUES HERE: splash, win screen, dialogs, then </main> -->
+
+        <!-- ================= SPLASH ================= -->
+        <div class="splash show" id="splash">
+      <svg class="splash-scene" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+        <g fill="#f3e4ee"><ellipse cx="330" cy="170" rx="120" ry="48"/><ellipse cx="290" cy="130" rx="55" ry="40"/><ellipse cx="400" cy="140" rx="45" ry="32"/></g>
+        <g fill="#fff3d6"><ellipse cx="1530" cy="200" rx="120" ry="48"/><ellipse cx="1500" cy="150" rx="50" ry="40"/><ellipse cx="1590" cy="165" rx="55" ry="40"/></g>
+        <g fill="#e6a2d8"><ellipse cx="90" cy="290" rx="70" ry="60"/><rect x="1690" y="220" width="70" height="160" rx="30"/><ellipse cx="1620" cy="320" rx="60" ry="30"/></g>
+        <path d="M0 330 Q200 300 440 440 L440 1080 H0Z" fill="#1fbf4a"/>
+        <path d="M1920 320 Q1700 380 1440 540 V1080 H1920Z" fill="#1fa545"/>
+        <path d="M0 640 Q500 540 960 600 T1920 560 V1080 H0Z" fill="#25b84a"/>
+        <path d="M980 600 C1200 580 1420 650 1390 790 C1120 800 800 800 880 910 C960 1000 1180 1040 1300 1080" fill="none" stroke="#e8731a" stroke-width="84" stroke-linecap="round"/>
+        <path d="M980 600 C1200 580 1420 650 1390 790 C1120 800 800 800 880 910 C960 1000 1180 1040 1300 1080" fill="none" stroke="#ffb13b" stroke-width="66" stroke-linecap="round"/>
+        <path d="M0 780 L520 690 L560 730 L0 840Z" fill="#ffb13b"/>
+
+        <!-- church -->
+        <rect x="170" y="250" width="180" height="170" fill="#fbe6ee"/>
+        <path d="M130 270 L260 220 L390 262 L360 285 L260 252 L160 292Z" fill="#ff5fae"/>
+        <circle cx="250" cy="305" r="24" fill="#ffc21a"/>
+        <rect x="130" y="440" width="320" height="250" fill="#fbe6ee"/>
+        <path d="M50 470 L270 370 L480 420 L450 462 L270 410 L90 495Z" fill="#ff5fae"/>
+        <path d="M205 690 V525 Q205 455 290 455 Q375 455 375 525 V690Z" fill="#ff8c1a" stroke="#ff5fae" stroke-width="14"/>
+        <circle cx="250" cy="540" r="18" fill="#2ba6e8" stroke="#ff5fae" stroke-width="6"/><circle cx="335" cy="540" r="18" fill="#2ba6e8" stroke="#ff5fae" stroke-width="6"/>
+
+        <!-- truck -->
+        <rect x="430" y="490" width="170" height="170" rx="20" fill="#ffb52e"/>
+        <rect x="320" y="580" width="140" height="95" rx="22" fill="#ffc83d"/>
+        <circle cx="380" cy="700" r="32" fill="#5b3fb8"/><circle cx="380" cy="700" r="14" fill="#e8e8f0"/>
+
+        <!-- cake house -->
+        <path d="M590 560 H990 V780 Q790 850 590 780Z" fill="#fff"/>
+        <ellipse cx="790" cy="570" rx="250" ry="92" fill="#ff3fd0"/>
+        <path d="M545 580 Q555 670 600 655 Q620 605 650 625 Q665 705 705 675 Q725 625 760 645 Q790 705 830 665 Q850 615 890 635 Q920 695 950 655 Q985 605 1035 580Z" fill="#e22fb8"/>
+        <ellipse cx="800" cy="450" rx="50" ry="34" fill="#1ec8ff"/><ellipse cx="900" cy="448" rx="48" ry="34" fill="#17d6ff"/>
+        <rect x="585" y="410" width="46" height="150" rx="10" transform="rotate(-25 608 485)" fill="#9a9aa2"/>
+        <rect x="775" y="675" width="90" height="140" rx="16" fill="#ff8c1a" stroke="#ff5fae" stroke-width="8"/><circle cx="820" cy="718" r="14" fill="#d98de8" stroke="#ff5fae" stroke-width="5"/>
+        <rect x="905" y="660" width="90" height="110" rx="18" fill="#c58de0" stroke="#ff7fc0" stroke-width="8" transform="rotate(-14 950 715)"/>
+        <path d="M650 740 q-40 10 -30 80 v70" fill="none" stroke="#8a8a92" stroke-width="36" stroke-linecap="round"/>
+
+        <!-- eyes house -->
+        <path d="M1385 650 L1920 590 V820 L1420 770Z" fill="#fff"/>
+        <path d="M1375 490 L1920 470 V600 L1390 655Z" fill="#a98ae6"/>
+        <rect x="1425" y="595" width="120" height="170" rx="18" fill="#1ea0ec" stroke="#7a55d8" stroke-width="12"/>
+        <circle cx="1670" cy="700" r="62" fill="#1c9ae8" stroke="#7a55d8" stroke-width="14"/>
+        <rect x="1490" y="470" width="14" height="40" fill="#cfcfd8"/><rect x="1612" y="480" width="14" height="40" fill="#cfcfd8"/>
+        <circle cx="1510" cy="415" r="72" fill="#fff"/><circle cx="1636" cy="438" r="72" fill="#fff"/>
+        <path d="M1440 410 A72 72 0 0 1 1580 405 Z" fill="#2ba6e8"/><path d="M1566 433 A72 72 0 0 1 1706 433 Z" fill="#2ba6e8"/>
+        <circle cx="1516" cy="415" r="32" fill="#2a8ee8"/><circle cx="1646" cy="440" r="32" fill="#2a8ee8"/>
+        <circle cx="1516" cy="415" r="14" fill="#16336b"/><circle cx="1646" cy="440" r="14" fill="#16336b"/>
+
+        <!-- bushes -->
+        <g fill="#2ee05a"><circle cx="40" cy="650" r="55"/><circle cx="110" cy="690" r="40"/><circle cx="470" cy="960" r="48"/><circle cx="520" cy="1010" r="38"/><circle cx="1830" cy="900" r="46"/><circle cx="1760" cy="960" r="40"/></g>
+      </svg>
+
+      <h1>QUANTUM<br>PURBLE PAIRS</h1>
+      <button class="splash-btn" type="button" id="playBtn">Play</button>
+    </div>
+
+    <!-- ================= WIN SCREEN ================= -->
+    <div class="confetti" id="confetti" aria-hidden="true">
+      <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+    </div>
+    <div class="overlay" id="winOverlay">
+      <div class="overlay-card">
+        <h2>You found them all!</h2>
+        <p>Matches: <b id="winMatches">0</b> &nbsp; Turns: <b id="winTurns">0</b> &nbsp; Time: <b id="winTime">00:00</b></p>
+        <button class="overlay-btn" type="button" id="winAgain">Play Again</button>
+      </div>
+    </div>
+
+    <!-- ================= DIALOGS ================= -->
+    <div class="w7-dialog" id="dlgOptions" hidden>
+      <div class="w7-dialog-title">Options</div>
+      <div class="w7-dialog-body">
+        <label class="w7-check"><input type="checkbox" id="optSound" checked> Play sounds</label>
+        <label class="w7-check"><input type="checkbox" id="optAnim" checked> Show animations</label>
+        <label class="w7-check"><input type="checkbox" id="optNight"> Night theme</label>
+        <label class="w7-radio"><input type="radio" name="speed" value="3200"> Slow flip-back</label>
+        <label class="w7-radio"><input type="radio" name="speed" value="2500" checked> Normal flip-back</label>
+        <label class="w7-radio"><input type="radio" name="speed" value="1600"> Fast flip-back</label>
+      </div>
+      <div class="w7-dialog-footer">
+        <button class="w7-btn default" type="button" data-close>OK</button>
+      </div>
+    </div>
+
+    <div class="w7-dialog" id="dlgStats" hidden>
+      <div class="w7-dialog-title">Statistics</div>
+      <div class="w7-dialog-body">
+        <table class="w7-stats">
+          <tr><th>Level</th><th>Won</th><th>Best turns</th></tr>
+          <tr><td>Beginner (6x6)</td><td id="stWon6">0</td><td id="stBest6">-</td></tr>
+          <tr><td>Intermediate (8x8)</td><td id="stWon8">0</td><td id="stBest8">-</td></tr>
+          <tr><td>Advanced (10x10)</td><td id="stWon10">0</td><td id="stBest10">-</td></tr>
+        </table>
+      </div>
+      <div class="w7-dialog-footer">
+        <button class="w7-btn" type="button" id="stReset">Reset</button>
+        <button class="w7-btn default" type="button" data-close>Close</button>
+      </div>
+    </div>
+
+    <div class="w7-dialog" id="dlgHelp" hidden>
+      <div class="w7-dialog-title">How to Play</div>
+      <div class="w7-dialog-body">
+        <p>Click a tile to flip it, then click a second tile.</p>
+        <p>Matching tokens are collected. Clear the board in as few turns as you can.</p>
+      </div>
+      <div class="w7-dialog-footer"><button class="w7-btn default" type="button" data-close>OK</button></div>
+    </div>
+
+    <div class="w7-dialog" id="dlgAbout" hidden>
+      <div class="w7-dialog-title">About Quantum Purble Pairs</div>
+      <div class="w7-dialog-body">
+        <p><b>Quantum Purble Pairs</b></p>
+        <p>A Purble Place style memory game for Moth Hack 2026.</p>
+      </div>
+      <div class="w7-dialog-footer"><button class="w7-btn default" type="button" data-close>OK</button></div>
+    </div>
+
+    <div class="w7-dialog" id="dlgExit" hidden>
+      <div class="w7-dialog-title">Quantum Purble Pairs</div>
+      <div class="w7-dialog-body"><p>Are you sure you want to quit?</p></div>
+      <div class="w7-dialog-footer">
+        <button class="w7-btn default" type="button" id="exitYes">Yes</button>
+        <button class="w7-btn" type="button" data-close>No</button>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ================= STATUS BAR ================= -->
+  <footer class="window-statusbar">
+    <span class="status-cell status-main" id="statusMsg">Ready. Find all matching pairs.</span>
+    <span class="status-cell status-time" id="timeLabel">00:00</span>
+    <span class="status-cell status-mode" id="modeLabel">Beginner (6x6)</span>
+  </footer>
+
+</div><!-- /window-container -->
+
+<!-- =====================================================================
+     GAME SCRIPT: shuffle, flip, match, score, jar, tube, timer, stats, menus
+     ===================================================================== -->
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var grid = $('purble-card-grid'), tpl = $('purble-card-template'), sb = $('sparkleBurst');
+  var NAMES = { 6: 'Beginner (6x6)', 8: 'Intermediate (8x8)', 10: 'Advanced (10x10)' };
+  var size = 6, first = null, lock = false, matches = 0, turns = 0, pairs = 0;
+  var secs = 0, timer = null, delay = 1000, stats = {};
+  var pending = null, pendingTimer = null;
+  var LIMITS = { 6: 150, 8: 240, 10: 420 };
+  var over = false;
+
+  var soundEnabled = true;
+  var SFX_FILES = {
+    click: 'sounds/click.ogg',
+    start: 'sounds/start.mp3',
+    flip: 'sounds/flip.ogg',
+    match: 'sounds/match.ogg',
+    wrong: 'sounds/wrong.ogg',
+    land: 'sounds/land.ogg',
+    win: 'sounds/win.mp3'
+  };
+  var audioCtx = null;
+
+  function fallbackBeep(name) {
+    try {
+      var AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return;
+      if (!audioCtx) audioCtx = new AC();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      var t = audioCtx.currentTime;
+      var osc = audioCtx.createOscillator();
+      var g = audioCtx.createGain();
+      osc.connect(g);
+      g.connect(audioCtx.destination);
+      var freqs = { click: 800, start: 520, flip: 440, match: 660, wrong: 180, land: 920, win: 880 };
+      var durs = { click: 0.04, start: 0.25, flip: 0.08, match: 0.3, wrong: 0.25, land: 0.12, win: 0.5 };
+      var f = freqs[name] || 440;
+      var d = durs[name] || 0.1;
+      osc.type = name === 'wrong' ? 'sawtooth' : (name === 'click' ? 'square' : 'triangle');
+      osc.frequency.setValueAtTime(f, t);
+      if (name === 'flip' || name === 'start') osc.frequency.exponentialRampToValueAtTime(f * 1.5, t + d);
+      if (name === 'wrong') osc.frequency.exponentialRampToValueAtTime(f * 0.7, t + d);
+      if (name === 'win') osc.frequency.exponentialRampToValueAtTime(f * 1.8, t + d);
+      g.gain.setValueAtTime(0.2, t);
+      g.gain.exponentialRampToValueAtTime(0.001, t + d);
+      osc.start(t);
+      osc.stop(t + d + 0.02);
+    } catch (e) {}
+  }
+
+  var buffers = {}, loading = {};
+  function actx() {
+    if (!audioCtx) {
+      var AC = window.AudioContext || window.webkitAudioContext;
+      if (AC) audioCtx = new AC();
+    }
+    return audioCtx;
+  }
+  function loadSound(name) {
+    var c = actx();
+    var src = (window.SOUND_DATA && SOUND_DATA[name]) || SFX_FILES[name];
+    if (!c || !src || buffers[name] || loading[name]) return;
+    loading[name] = true;
+    var raw;
+    if (src.indexOf('data:') === 0) {
+      var b = atob(src.split(',')[1]), u = new Uint8Array(b.length);
+      for (var i = 0; i < b.length; i++) u[i] = b.charCodeAt(i);
+      raw = Promise.resolve(u.buffer);
+    } else {
+      raw = fetch(src).then(function (r) { return r.arrayBuffer(); });
+    }
+    raw.then(function (ab) { return c.decodeAudioData(ab); })
+      .then(function (buf) { buffers[name] = buf; })
+      .catch(function () { loading[name] = false; });
+  }
+  function sfx(name) {
+    if (!soundEnabled) return;
+    var c = actx();
+    if (!c || !buffers[name]) { loadSound(name); fallbackBeep(name); return; }
+    if (c.state === 'suspended') c.resume();
+    var s = c.createBufferSource(), g = c.createGain();
+    s.buffer = buffers[name];
+    g.gain.value = 0.7;
+    s.connect(g); g.connect(c.destination);
+    s.start(0);
+  }
+
+  try { stats = JSON.parse(localStorage.getItem('qpp-stats') || '{}'); } catch (e) { stats = {}; }
+  function saveStats() { try { localStorage.setItem('qpp-stats', JSON.stringify(stats)); } catch (e) {} }
+  function showStats() {
+    [6, 8, 10].forEach(function (n) {
+      var s = stats[n] || { won: 0, best: null };
+      $('stWon' + n).textContent = s.won;
+      $('stBest' + n).textContent = s.best === null ? '-' : s.best;
+    });
+  }
+
+  function fmt(s) { return ('0' + Math.floor(s / 60)).slice(-2) + ':' + ('0' + (s % 60)).slice(-2); }
+    function updateTube() {
+    var left = Math.max(LIMITS[size] - secs, 0);
+    $('tubeLiquid').style.setProperty('--level', Math.round(left / LIMITS[size] * 88) + '%');
+    $('gaugeTube').classList.toggle('low', left <= 15);
+  }
+    function startTimer() {
+    if (timer) return;
+    timer = setInterval(function () {
+      secs++;
+      updateTube();
+      var left = LIMITS[size] - secs;
+      var tl = $('timeLabel');
+      tl.textContent = fmt(Math.max(left, 0));
+      tl.style.color = left <= 15 ? '#c92a2a' : '';
+      tl.style.fontWeight = left <= 15 ? '700' : '';
+      if (left <= 0) lose();
+    }, 1000);
+  }
+  function stopTimer() { clearInterval(timer); timer = null; }
+
+  function shuffle(a) {
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1)), t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+
+  function updateHud() {
+    $('matchesValue').textContent = matches;
+    $('turnsValue').textContent = turns;
+    updateTube();
+    var lamp = matches >= pairs ? 'green' : (matches >= pairs / 2 ? 'yellow' : 'red');
+    ['slot1', 'slot2', 'slot3'].forEach(function (id) {
+      var s = $(id);
+      s.classList.remove('lamp-red', 'lamp-yellow', 'lamp-green');
+      s.classList.add('lamp-' + lamp);
+    });
+  }
+  
+  function fly(card, wait) {
+    var ring = card.querySelector('.card-front-ring');
+    var r = ring.getBoundingClientRect();
+    var j = document.querySelector('#tokenJar .jar-body').getBoundingClientRect();
+    var f = document.createElement('div');
+    f.className = 'flyer';
+    f.innerHTML = ring.innerHTML;
+    f.style.cssText = 'left:' + r.left + 'px;top:' + r.top + 'px;width:' + r.width + 'px;height:' + r.height + 'px';
+    document.body.appendChild(f);
+    card.classList.add('is-empty');
+    var dx = j.left + j.width / 2 - (r.left + r.width / 2);
+    var dy = j.top + j.height * 0.35 - (r.top + r.height / 2);
+    var anim = f.animate([
+      { transform: 'translate(0,0) scale(1) rotate(0deg)', opacity: 1 },
+      { transform: 'translate(' + dx * 0.15 + 'px,-70px) scale(1.4) rotate(110deg)', opacity: 1, offset: 0.3 },
+      { transform: 'translate(' + dx * 0.65 + 'px,' + (dy * 0.45 - 50) + 'px) scale(0.85) rotate(280deg)', opacity: 1, offset: 0.7 },
+      { transform: 'translate(' + dx + 'px,' + dy + 'px) scale(0.2) rotate(420deg)', opacity: 0.4 }
+    ], { duration: 900, delay: wait || 0, easing: 'cubic-bezier(.45,.05,.55,.95)', fill: 'both' });
+    anim.onfinish = function () {
+      f.remove();
+      sfx('land');
+      var jar = $('tokenJar');
+      jar.classList.remove('collect'); void jar.offsetWidth; jar.classList.add('collect');
+    };
+  }
+
+  function burst(card) {
+    var f = $('boardFrame').getBoundingClientRect(), r = card.getBoundingClientRect();
+    sb.style.left = (r.left - f.left + r.width / 2) + 'px';
+    sb.style.top = (r.top - f.top + r.height / 2) + 'px';
+    sb.classList.remove('go'); void sb.offsetWidth; sb.classList.add('go');
+  }
+
+  function build(n) {
+    size = n; first = null;  clearTimeout(pendingTimer); pending = null; lock = false; matches = 0; turns = 0; secs = 0; stopTimer();
+    over = false;
+    $('timeLabel').textContent = fmt(LIMITS[n]);
+    $('timeLabel').style.color = '';
+    $('timeLabel').style.fontWeight = '';
+    $('modeLabel').textContent = NAMES[n];
+    $('statusMsg').textContent = 'Ready. Find all matching pairs.';
+    grid.style.setProperty('--grid-cols', n);
+    grid.style.setProperty('--grid-rows', n);
+    grid.replaceChildren();
+    pairs = n * n / 2;
+    var deck = [];
+    for (var p = 0; p < pairs; p++) { deck.push(p % 8, p % 8); }
+    shuffle(deck);
+    deck.forEach(function (t) {
+      var c = tpl.content.firstElementChild.cloneNode(true);
+      c.dataset.token = t;
+      c.querySelector('.card-front-ring').innerHTML =
+        '<svg viewBox="0 0 100 100" style="width:76%;height:76%"><use href="#tok-' + (t + 1) + '"/></svg>';
+      c.addEventListener('click', function () { pick(c); });
+      c.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick(c); } });
+      grid.appendChild(c);
+    });
+    updateHud();
+  }
+
+    function closePending() {
+    clearTimeout(pendingTimer);
+    if (pending) {
+      pending.forEach(function (x) { x.classList.remove('flipped', 'wrong'); });
+      pending = null;
+    }
+  }
+
+  function pick(c) {
+    if (lock || over || c.classList.contains('flipped')) return;
+    closePending();
+    sfx('flip');
+    startTimer(); burst(c); c.classList.add('flipped');
+    if (!first) { first = c; return; }
+    turns++;
+    var a = first, b = c; first = null;
+    if (a.dataset.token === b.dataset.token) {
+      matches++; $('statusMsg').textContent = 'Match!';
+      sfx('match');
+      setTimeout(function () { fly(a, 0); fly(b, 130); }, 1100);
+      var sv = $('matchesValue'); sv.classList.remove('bump'); void sv.offsetWidth; sv.classList.add('bump');
+      $('tokenJar').classList.remove('collect'); void $('tokenJar').offsetWidth; $('tokenJar').classList.add('collect');
+      updateHud();
+      if (matches === pairs) win();
+    } else {
+      $('statusMsg').textContent = 'No match. Try again.';
+      sfx('wrong');
+      updateHud();
+      a.classList.add('wrong'); b.classList.add('wrong');
+      setTimeout(function () {
+        [a, b].forEach(function (x) { x.classList.remove('flipped', 'wrong'); });
+        lock = false;
+      }, delay);
+    }
+  }
+
+  function win() {
+    stopTimer();
+    over = true;
+    $('winOverlay').querySelector('h2').textContent = 'You found them all!';
+    sfx('win');
+    var s = stats[size] || { won: 0, best: null };
+    s.won++; if (s.best === null || turns < s.best) s.best = turns;
+    stats[size] = s; saveStats(); showStats();
+    $('winMatches').textContent = matches; $('winTurns').textContent = turns; $('winTime').textContent = fmt(secs);
+    $('statusMsg').textContent = 'You won!';
+    setTimeout(function () { $('winOverlay').classList.add('show'); $('confetti').classList.add('show'); }, 900);
+  }
+  
+  function lose() {
+    over = true; lock = true;
+    stopTimer();
+    sfx('wrong');
+    $('statusMsg').textContent = "Time's up!";
+    $('winOverlay').querySelector('h2').textContent = "Time's up!";
+    $('winMatches').textContent = matches; $('winTurns').textContent = turns; $('winTime').textContent = fmt(secs);
+    setTimeout(function () { $('winOverlay').classList.add('show'); }, 500);
+  }
+  /* ---- menu, dialogs, window buttons ---- */
+  var dialogs = document.querySelectorAll('.w7-dialog');
+  function closeAll() { dialogs.forEach(function (d) { d.hidden = true; }); }
+  function openDlg(id) { closeAll(); $(id).hidden = false; }
+  document.querySelectorAll('[data-dialog]').forEach(function (it) { it.addEventListener('click', function () { openDlg(it.dataset.dialog); }); });
+  document.querySelectorAll('[data-close]').forEach(function (b) { b.addEventListener('click', closeAll); });
+  document.querySelectorAll('[data-size]').forEach(function (it) {
+    it.addEventListener('click', function () {
+      document.querySelectorAll('[data-size]').forEach(function (o) {
+        o.querySelector('.check').textContent = ''; o.setAttribute('aria-checked', 'false');
+      });
+      it.querySelector('.check').textContent = '\u2713'; it.setAttribute('aria-checked', 'true');
+      build(parseInt(it.dataset.size, 10));
+    });
+  });
+  document.querySelector('[data-action="new"]').addEventListener('click', function () { build(size); });
+  $('playBtn').addEventListener('click', function () { sfx('start'); $('splash').classList.remove('show'); });
+  $('winAgain').addEventListener('click', function () {
+    $('winOverlay').classList.remove('show'); $('confetti').classList.remove('show'); build(size);
+  });
+  $('stReset').addEventListener('click', function () { stats = {}; saveStats(); showStats(); });
+  $('exitYes').addEventListener('click', function () { closeAll(); $('purbleWindow').style.display = 'none'; });
+  $('btnClose').addEventListener('click', function () { openDlg('dlgExit'); });
+  $('btnMax').addEventListener('click', function () { $('purbleWindow').classList.toggle('maximized'); });
+  $('btnMin').addEventListener('click', function () {
+    var w = $('purbleWindow'); w.classList.add('minimized');
+    setTimeout(function () { w.classList.remove('minimized'); }, 900);
+  });
+  $('optNight').addEventListener('change', function () { document.documentElement.dataset.theme = this.checked ? 'night' : ''; });
+  $('optAnim').addEventListener('change', function () { document.body.classList.toggle('no-anim', !this.checked); });
+  $('optSound').addEventListener('change', function () { soundEnabled = this.checked; });
+  document.querySelectorAll('input[name="speed"]').forEach(function (r) {
+    r.addEventListener('change', function () { delay = parseInt(this.value, 10); });
+  });
+
+  // Click sounds for menu items, dialog buttons, and window buttons
+  document.querySelectorAll('.dropdown-item, .w7-btn, .ctrl-btn, .overlay-btn').forEach(function (el) {
+    el.addEventListener('click', function () { sfx('click'); });
+  });
+
+  document.addEventListener('keydown', function (e) {
+    var k = { F1: 'dlgHelp', F5: 'dlgOptions', F7: 'dlgStats' }[e.key];
+    if (k) { e.preventDefault(); openDlg(k); }
+    if (e.key === 'F2') { e.preventDefault(); build(size); }
+    if (e.key === 'Escape') closeAll();
+  });
+
+  showStats();
+  setTimeout(function () { Object.keys(SFX_FILES).forEach(loadSound); }, 300);
+  build(6);
+})();
+</script>
+</body>
+</html>
+
+

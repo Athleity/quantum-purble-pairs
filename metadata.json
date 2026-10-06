@@ -1,0 +1,6 @@
+{
+  "name": "Quantum Purble Pairs",
+  "description": "Nostalgic Windows 7 Purble Place style card matching game with authentic skeuomorphic aesthetics, 3D flip cards, and glass jar accumulator for Moth Hack 2026.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
