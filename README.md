@@ -1,6 +1,6 @@
 # Quantum Purble Pairs
 
-A memory-matching game styled after the Windows 7 *Purble Pairs*, with a quantum twist. Built for **Moth Hack — London 2026** (Challenge 05, Quantum game).
+A memory-matching game styled after the Windows 7 Purble Pairs, with a quantum twist. Built for Moth Hack - London 2026 (Challenge 05, Quantum game).
 
 **Play it live:** https://quantum-purble-pairs.vercel.app
 
@@ -8,42 +8,38 @@ A memory-matching game styled after the Windows 7 *Purble Pairs*, with a quantum
 
 ![Gameplay](gameplay.png)
 
----
-
 ## What it is
 
 Flip tiles, find matching pairs, and clear the board before the clock runs out. The look is a close recreation of the classic Windows 7 game: the Aero window, the glossy purple board, the green clover tile backs, the chalkboard scoreboard, the glass jar and the checkered floor.
 
-On top of the classic game there is a quantum "peek" mechanic. Some tiles are entangled pairs. Clicking one of them reveals both for a moment, along with a measured two-qubit state (for example `|01>`). The state shown on each peek comes from a real run on the Moth Atlas **graph-v1** engine.
+On top of the classic game there is a quantum "peek" mechanic. Some tiles are entangled pairs. Clicking one of them reveals both for a moment, along with a measured two-qubit state such as `01`. The state shown on each peek comes from a run on the Moth Atlas graph-v1 engine.
 
 ## Features
 
-- Three board sizes: **6x6 (Beginner), 8x8 (Intermediate), 10x10 (Advanced)**
+- Three board sizes: 6x6 (Beginner), 8x8 (Intermediate), 10x10 (Advanced)
 - Eight token types: heart, clover, smile, gumdrop, star, shield, diamond, cross
-- A fresh random layout every game, always winnable (symbol counts are even and add up to the board size)
-- Countdown timer per level: **2:30** on 6x6, **4:00** on 8x8, **7:00** on 10x10
+- A fresh random layout every game, always winnable
+- Countdown timer per level: 2:30 on 6x6, 4:00 on 8x8, 7:00 on 10x10
 - A blue tube that drains with the clock and turns red in the last 15 seconds
-- Three lamps in the jar stand: red at the start, yellow at half the pairs, green when you clear the board
+- Three lamps by the jar: red at the start, yellow at half the pairs, green when you clear the board
 - Matched tokens fly into the glass jar
 - Click a third tile after a wrong guess and the two wrong tiles flip back at once
-- Windows 7 style menus and dialogs: Options (sound, animations, night theme, flip-back speed), Statistics (wins and best turns, saved in your browser), How to Play, About
-- Sound effects played with the Web Audio API (decoded once, so flips never lag)
+- Windows 7 style menus and dialogs: Options, Statistics, How to Play and About
+- Sound effects played with the Web Audio API
 - Keyboard shortcuts: F1 help, F2 new game, F5 options, F7 statistics
 
 ## How the quantum part works
 
-Everything quantum in this project is **emulated**. No QPU hardware is used.
+Everything quantum in this project is emulated. No QPU hardware is used.
 
-| Piece | What it does | Where it comes from |
-|---|---|---|
-| Peek ket | The state shown when you click an entangled tile (such as `|01>`) | A saved **Moth Atlas graph-v1** emulator run (`atlas-topology.json`) |
-| Circuit-drawn randomness | Hadamard gates put qubits in superposition, and a Born-rule measurement gives a number used for shuffling and picking pairs | A small state-vector simulation in the browser |
-| Reversible match check | Two 3-qubit symbol registers go through CNOT gates and read `000` when the symbols are equal | The same simulation, checked against a plain `===` comparison |
-| Fallback | If the Atlas file can't load, a local Bell-state simulation (Hadamard plus CNOT) takes over and the game badge says so | Local code |
+- **Peek result:** the state shown when you click an entangled tile comes from a saved Moth Atlas graph-v1 emulator run, stored in `atlas-topology.json`.
+- **Circuit-drawn randomness:** Hadamard gates put qubits in superposition, and a Born-rule measurement gives a number used for shuffling and picking pairs. This runs in a small state-vector simulation in the browser.
+- **Reversible match check:** two 3-qubit symbol registers go through CNOT gates and read `000` when the symbols are equal. The result is checked against a plain comparison.
+- **Fallback:** if the Atlas file can't load, a local Bell-state simulation (Hadamard plus CNOT) takes over, and the game badge says so.
 
 ### The Moth Atlas run
 
-- Engine: **graph-v1** (emulation)
+- Engine: graph-v1 (emulation)
 - Job: 16 qubits, 1024 shots, seed 2026, a coupling map of 8 pairs
 - Job ID: `440d603d-73d7-4510-bde1-f301606df661`
 - The run was made from a notebook, and the returned measurements were converted into `atlas-topology.json` (156 shots).
@@ -51,9 +47,9 @@ Everything quantum in this project is **emulated**. No QPU hardware is used.
 
 ## Honest limits
 
-- The Atlas data is a **saved run**, not live engine output.
+- The Atlas data is a saved run, not live engine output.
 - The API returned only the top 20 outcomes, so the data is skewed and some pairs mostly read `11`. It is a random graph state, not a perfect Bell pair.
-- The match rules and scoring are ordinary game code. The quantum parts supply randomness and the peek result, and they give the same answers an ordinary program would.
+- The match rules and scoring are ordinary game code. The quantum parts supply randomness and the peek result.
 - Randomness is circuit-sampled, not true quantum randomness.
 
 ## Run it locally
@@ -67,7 +63,7 @@ npm install --legacy-peer-deps
 npm run dev
 ```
 
-Then open the address Vite prints (usually http://localhost:5173).
+Then open the address Vite prints, usually http://localhost:5173.
 
 To build for production:
 
@@ -79,36 +75,34 @@ The `--legacy-peer-deps` flag is needed because of a version conflict between Vi
 
 ## Project structure
 
-```
-index.html            page structure, window, dialogs and game script
-style.css             Windows 7 look: window, board, tiles, jar, chalkboard
-game.js               game logic and quantum simulation
-atlas-topology.json   saved Moth Atlas graph-v1 measurements
-public/sounds.js      embedded sound effects
-public/               files served as-is by Vite
-sounds/               original audio files
-src/                  Vite app entry
-```
+- `index.html` - page structure, window and dialogs
+- `style.css` - the Windows 7 look
+- `game.js` - game logic and quantum simulation
+- `atlas-topology.json` - saved Moth Atlas graph-v1 measurements
+- `public/sounds.js` - embedded sound effects
+- `public/` - files served as-is by Vite
+- `sounds/` - original audio files
+- `src/` - Vite app entry
 
 ## Built with
 
-- HTML, CSS and vanilla JavaScript on **Vite**
-- **Moth Atlas** graph-v1 engine (emulation)
+- HTML, CSS and vanilla JavaScript on Vite
+- Moth Atlas graph-v1 engine (emulation)
 - Web Audio API for sound
-- Deployed on **Vercel**
+- Deployed on Vercel
 
 ## Credits
 
-- Original game: *Purble Place* by Microsoft. This is an unofficial fan recreation made for a hackathon, with no Microsoft code or assets.
+- Original game: Purble Place by Microsoft. This is an unofficial fan recreation made for a hackathon, with no Microsoft code or assets.
 - Sound effects: Kenney Interface Sounds (CC0).
-- Quantum engine: [Moth Quantum](https://platform.mothquantum.com).
+- Quantum engine: [Moth Quantum](https://platform.mothquantum.com)
 
 ## AI disclosure
 
-Parts of the code, the interface and this README were written with help from generative AI tools: **Google AI Studio (Gemini)** and **Claude**. I reviewed, tested and edited the result.
+Parts of the code, the interface and this README were written with help from generative AI tools: Google AI Studio (Gemini) and Claude. I reviewed, tested and edited the result.
 
 ## Author
 
-**Quanth** (individual entry) · GitHub: [@Athleity](https://github.com/Athleity)
+Quanth (individual entry) - GitHub: [@Athleity](https://github.com/Athleity)
 
-Made for Moth Hack — London 2026.
+Made for Moth Hack - London 2026.
