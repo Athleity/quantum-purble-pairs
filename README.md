@@ -103,6 +103,6 @@ Parts of the code, the interface and this README were written with help from gen
 
 ## Author
 
-Quanth (individual entry) - GitHub: [@Athleity](https://github.com/Athleity)
+Quantha (individual entry) - GitHub: [@Athleity](https://github.com/Athleity)
 
 Made for Moth Hack - London 2026.
